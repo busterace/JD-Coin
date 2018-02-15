@@ -2,10 +2,13 @@ import logging
 import os
 import pickle
 import traceback
+
 from pathlib import Path
 
 import requests
+import logUtil
 
+import emailUtil
 from config import config
 from job import jobs_all
 
@@ -28,17 +31,21 @@ def main():
         if not job.job_success:
             jobs_failed.append(job.job_name)
 
-    print('=================================')
-    print('= 任务数: {}; 失败数: {}'.format(len(jobs), len(jobs_failed)))
+    logging.info("=================================")
+    logging.info('= 任务数: {}; 失败数: {}'.format(len(jobs), len(jobs_failed)))
 
     if jobs_failed:
-        print('= 失败的任务: {}'.format(jobs_failed))
+        logging.info('= 失败的任务: {}'.format(jobs_failed))
     else:
-        print('= 全部成功 ~')
+        logging.info('= 全部成功 ~')
 
-    print('=================================')
+    logging.info("=================================")
 
     save_session(session)
+    # 获取日志内容
+    log_text = logUtil.get_today_log_text()
+    # 发送邮件
+    emailUtil.send(log_text)
 
 
 def make_session() -> requests.Session:

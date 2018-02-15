@@ -34,6 +34,8 @@ if __name__ == '__main__':
 log_format = '%(asctime)s %(name)s[%(module)s] %(levelname)s: %(message)s'
 logging.basicConfig(format=log_format, level=logging.INFO)
 logger = logging.getLogger()
+log_dir = Path(__file__).parent.joinpath('../log/')
+log_dir.mkdir(exist_ok=True)
 file_handler = logging.FileHandler("../log/" + get_log_file_name(get_today_day_time()))
 file_handler.formatter = logging.Formatter(log_format)
 logger.addHandler(file_handler)
